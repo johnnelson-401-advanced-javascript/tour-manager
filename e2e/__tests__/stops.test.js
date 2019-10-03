@@ -49,7 +49,9 @@ describe('tests stops and addGeo() functionality', () => {
   it('adds a stop with geolocation to a tour', () => {
     return postTour(tour1).then(tour => {
       return postStop(stop1, tour._id).then(body => {
+        
         expect(body.weather.time).toMatch(mongoDate);
+
         expect(body).toMatchInlineSnapshot(
           {
             ...matchMongoId,
@@ -77,6 +79,39 @@ describe('tests stops and addGeo() functionality', () => {
           }
         `
         );
+      });
+    });
+  });
+  function deleteStop(stopId) {
+    return request
+      .delete(`/api/stops/${stopId}`)
+      .expect(200)
+      .then(({ body }) => body);
+  }
+  it('deletes a stop', () => {
+    return postTour(tour1).then(tour => {
+      return postStop(stop1, tour._id).then(stop => {
+        return deleteStop(stop._id)
+          .then(res => {
+            console.log(stop);
+            expect(res).toEqual(stop);
+          });
+      });    
+    });
+  });
+
+  
+  it('updates attendance at a stop', () => {
+    
+    const stopAttendance = { attendance: 42 };
+
+    return postTour(tour1).then(tour => {
+      return postStop(stop1, tour._id).then(stop =>{
+        return request 
+          .put(`/api/stops/tours/${tour._id}/stops/${stop._id}/attendance`)
+          .send(stopAttendance)
+          .expect(200)
+          .then(({ body }) => body);
       });
     });
   });
