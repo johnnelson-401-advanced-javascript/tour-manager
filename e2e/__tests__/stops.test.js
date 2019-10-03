@@ -15,6 +15,7 @@ describe('tests stops and addGeo() functionality', () => {
   beforeEach(() => {
     return db.dropCollection('tours');
   });
+
   const stop1 = {
     name: 'cats on ice',
     address: '97209',
@@ -25,11 +26,13 @@ describe('tests stops and addGeo() functionality', () => {
     },
     attendance: 3
   };
+
   const tour1 = {
     title: 'Cats on Ice',
     activities: ['cats', 'ice', 'first-aid'],
     launchDate: Date.now()
   };
+
   function postTour(tour) {
     return request
       .post('/api/tours')
@@ -93,7 +96,6 @@ describe('tests stops and addGeo() functionality', () => {
       return postStop(stop1, tour._id).then(stop => {
         return deleteStop(stop._id)
           .then(res => {
-            console.log(stop);
             expect(res).toEqual(stop);
           });
       });    
@@ -102,7 +104,7 @@ describe('tests stops and addGeo() functionality', () => {
 
   
   it('updates attendance at a stop', () => {
-    
+
     const stopAttendance = { attendance: 42 };
 
     return postTour(tour1).then(tour => {
